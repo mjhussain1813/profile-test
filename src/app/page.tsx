@@ -1,33 +1,28 @@
 // src/app/page.tsx
-
 import { getProfile } from '../../lib/contentful';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
+
+export const revalidate = 10; // <-- ISR: regenerate page every 10s in background
 
 export default async function Home() {
   const profile: any = await getProfile();
   const { name, bio, profilePicture, github, email } = profile.fields;
 
-console.log(profilePicture)
   return (
     <main className="max-w-2xl mx-auto p-6 space-y-6">
       <h1 className="text-4xl font-bold">{name}</h1>
 
-{profilePicture?.fields?.file?.url && (
-  <Image
-    src={`https:${profilePicture.fields.file.url}`}
-    alt={profilePicture.fields.title || 'Profile Picture'}
-    width={200}
-    height={200}
-    className="rounded-full"
-  />
-)}
+      {profilePicture?.fields?.file?.url && (
+        <Image
+          src={`https:${profilePicture.fields.file.url}`}
+          alt={profilePicture.fields.title || 'Profile Picture'}
+          width={200}
+          height={200}
+          className="rounded-full"
+        />
+      )}
 
-
-        <div className="prose prose-neutral">
-          {bio}
-        </div>
-      
+      <div className="prose prose-neutral">{bio}</div>
 
       <p>
         <strong>Email:</strong>{' '}
